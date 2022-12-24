@@ -1,20 +1,53 @@
-﻿// LabsSem3.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
+﻿#define SDL_MAIN_HANDLED
 #include <iostream>
+#include <SDL.h>
+
+void draw(SDL_Renderer* p_renderer);
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::cout << "SDL2 Lab#16" << '\n';
+
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) { 
+		std::cout << "SDL_Init Error:" << SDL_GetError() << std::endl;
+		return 1;
+	}
+
+
+	SDL_Window* win = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+	if (win == nullptr) {
+		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+		return 1;
+	}
+
+	SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (ren == nullptr) {
+		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+		return 1;
+	}
+
+	draw(ren);
+	
+	SDL_Delay(2000);
+	
+	SDL_DestroyWindow(win);
+	SDL_DestroyRenderer(ren);
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+void draw(SDL_Renderer* p_renderer)
+{
+	SDL_RenderClear(p_renderer);
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+	SDL_Rect rect;
+	rect.x = 10;
+	rect.y = 10;
+	rect.w = 200;
+	rect.h = 200;
+
+	SDL_SetRenderDrawColor(p_renderer, 190, 80, 120, 255);
+	SDL_RenderFillRect(p_renderer, &rect);
+
+	SDL_SetRenderDrawColor(p_renderer, 0, 0, 0, 255);
+
+	SDL_RenderPresent(p_renderer);
+}
