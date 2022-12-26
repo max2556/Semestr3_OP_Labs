@@ -85,15 +85,15 @@ void DB_Manager::add_record(Record&& record)
 Record DB_Manager::create_record()
 {
 	Record new_record;
-	std::cout << "Ïîñëåäîâàòåëüíî ââåäèòå ÔÈÎ, ñïåöèàëüíîñòü, êàáèíåò, âðåìÿ è äåíü ðàáîòû \n";
+	std::cout << "ÐŸÐ¾ÑÐ»ÐµÐ´Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾ Ð²Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¤Ð˜Ðž, ÑÐ¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ð¾ÑÑ‚ÑŒ, ÐºÐ°Ð±Ð¸Ð½ÐµÑ‚, Ð²Ñ€ÐµÐ¼Ñ Ð¸ Ð´ÐµÐ½ÑŒ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ \n";
 	
 	
-	std::cout << "Ââåäèòå ÔÈÎ: ";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¤Ð˜Ðž: ";
 	std::getline(std::cin, new_record.FIO);
 	std::getline(std::cin, new_record.FIO);
 	new_record.set_specialization();
 
-	std::cout << "Ââåäèòå íîìåð êàáèíåòà: ";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð½Ð¾Ð¼ÐµÑ€ ÐºÐ°Ð±Ð¸Ð½ÐµÑ‚Ð°: ";
 	std::cin >> new_record.cabinet_number;
 	new_record.set_time();
 	new_record.set_day();

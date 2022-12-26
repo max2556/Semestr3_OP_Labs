@@ -8,7 +8,7 @@
 
 class DB_Manager
 {
-    // Приватные поля
+    // РџСЂРёРІР°С‚РЅС‹Рµ РїРѕР»СЏ
 private:
     inline static const char* CONFIG_FILE = "last_session.cfg";
     inline static const char* DATABASE = "data.db";
@@ -16,7 +16,7 @@ private:
     static DB_Manager* instance;
     std::fstream file_stream = std::fstream();
 
-    // Публичные статические методы
+    // РџСѓР±Р»РёС‡РЅС‹Рµ СЃС‚Р°С‚РёС‡РµСЃРєРёРµ РјРµС‚РѕРґС‹
 public:
     static DB_Manager* Instance() {
         if (!instance)
@@ -40,9 +40,9 @@ public:
 
     void sort_name();
 
-    // Приватные методы
+    // РџСЂРёРІР°С‚РЅС‹Рµ РјРµС‚РѕРґС‹
 private:
-    // Смешной синглтон
+    // РЎРјРµС€РЅРѕР№ СЃРёРЅРіР»С‚РѕРЅ
     DB_Manager() = default;
     DB_Manager(const DB_Manager&) = delete;
     DB_Manager& operator=(const DB_Manager&) = delete;
