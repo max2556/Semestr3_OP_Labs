@@ -69,7 +69,7 @@ public:
 		//Собираем поля записи из строк
 		FIO = fields[0];
 		specialization = fields[1];
-		cabinet_number = std::stoi(fields[2]);
+		cabinet_number = static_cast<std::uint32_t>(std::stoi(fields[2]));
 		work_start = Time(fields[3]);
 		for (auto it = Days.begin(); it != Days.end(); ++it)
 			if (it->second == fields[4])
@@ -80,7 +80,7 @@ public:
 	std::string FIO = "И.И. Иванова";
 	std::string specialization = Specializations[Specialization::Dentist];
 	uint32_t cabinet_number = 0;
-	Time work_start = Time::_MIN_TIME();
+	Time work_start = Time::MIN_TIME_();
 	WeekDay day = WeekDay::Monday;
 
 public:
@@ -120,9 +120,7 @@ public:
 			specialization = Specializations[input];
 			return;
 		}
-
-
-
+		
 		std::cout << "Введите специальность самостоятельно \n";
 		std::cin >> specialization;
 	}
@@ -183,4 +181,18 @@ private:
 	}
 };
 
+inline std::istream& operator>>(std::istream& is, Record::WeekDay& i)
+{
+	int tmp;
+	if (is >> tmp)
+		i = static_cast<Record::WeekDay>(tmp);
+	return is;
+}
 
+inline std::istream& operator>>(std::istream& is, Record::Specialization& i)
+{
+	int tmp;
+	if (is >> tmp)
+		i = static_cast<Record::Specialization>(tmp);
+	return is;
+}

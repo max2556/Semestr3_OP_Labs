@@ -1,9 +1,10 @@
 #pragma once
+
 #include <string>
 #include <vector>
 #include <fstream>
-#include "Record.h"
 
+#include "Record.hpp"
 
 class DB_Manager
 {
@@ -41,12 +42,16 @@ public:
 
     // Приватные методы
 private:
+    // Смешной синглтон
     DB_Manager() = default;
+    DB_Manager(const DB_Manager&) = delete;
+    DB_Manager& operator=(const DB_Manager&) = delete;
+    
     bool YN_Dialog();
 
-    void GotoLine(unsigned int num) {
+    void GotoLine(std::size_t num) {
         file_stream.seekg(std::ios::beg);
-        for (int i = 0; i < num - 1; ++i) {
+        for (std::size_t i = 0; i + 1 < num; ++i) {
             file_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }

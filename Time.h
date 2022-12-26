@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 
 class Time {
@@ -6,21 +7,21 @@ private:
 	int hours = -1;
 	int minutes = -1;
 	bool valid = false;
-
-public:
-	Time(std::string& str);
-	Time(int _hours, int _minutes);
-	Time(std::string& _hours, std::string& _minutes);
-	Time();
-
+	
 private:
-	void setValid(int _hours, int _minutes);
+	void setValid(int hours_, int minutes_);
 	std::string format(int num);
 
 public:
-	bool setHours(int _num);
+	Time(std::string& str);
+	Time(int hours_, int minutes_);
+	Time(std::string& hours_, std::string& minutes_);
+	Time();
+
+public:
+	bool setHours(int num_);
 	int getHours();
-	bool setMinutes(int _num);
+	bool setMinutes(int num_);
 	int getMinutes();
 	bool isValid();
 
@@ -28,32 +29,14 @@ public:
 	std::string to_string();
 
 public:
-	bool operator<(const Time& other) {
-		return hours < other.hours || (hours == other.hours && minutes < other.minutes);
-	}
-	bool operator>(const Time& other) {
-		return hours > other.hours || (hours == other.hours && minutes > other.minutes);
-	}
-	bool operator==(const Time& other) {
-		return hours == other.hours && minutes == other.minutes;
-	}
-	bool operator<=(const Time& other) {
-		if (this != nullptr)
-			return *this < other || *this == other;
-	}
-	bool operator>=(const Time& other) {
-		if (this != nullptr)
-			return *this > other || *this == other;
-	}
-
+    auto operator<=>(const Time& other) const = default;
 
 public:
-	static Time&& _MAX_TIME() {
+	static Time&& MAX_TIME_() {
 		return Time(23, 59);
 	}
 
-	static Time&& _MIN_TIME(){
+	static Time&& MIN_TIME_(){
 		return Time(00, 00);
 	}
 };
-

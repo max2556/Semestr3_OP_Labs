@@ -7,9 +7,7 @@ Time::Time(std::string& str) {
 	if (pos > 2) return;  //Проверка, что часы занимают не более двух символов. Запись '6:00' валидна, запись '06:00' валидна, запись '006:00' не валидна
 	if (str.length() - pos - 1 != 2) return; //Минуты обязаны занимать два символа 
 
-
 	remove(str.begin(), str.end(), ' ');
-
 
 	int hoursPart = atoi(&str[0]);
 	int minutesPart = atoi(&str[pos + 1]);
@@ -17,16 +15,16 @@ Time::Time(std::string& str) {
 	setValid(hoursPart, minutesPart);
 }
 
-Time::Time(int _hours, int _minutes) {
-	setValid(_hours, _minutes);
+Time::Time(int hours_, int minutes_) {
+	setValid(hours_, minutes_);
 }
 
-Time::Time(std::string& _hours, std::string& _minutes) {
-	if (_hours.length() > 2) return;
-	if (_minutes.length() != 2) return;
+Time::Time(std::string& hours_, std::string& minutes_) {
+	if (hours_.length() > 2) return;
+	if (minutes_.length() != 2) return;
 
-	int hoursPart = atoi(&_hours[0]);
-	int minutesPart = atoi(&_minutes[0]);
+	int hoursPart = atoi(&hours_[0]);
+	int minutesPart = atoi(&minutes_[0]);
 
 	setValid(hoursPart, minutesPart);
 }
@@ -35,10 +33,8 @@ Time::Time() {
 	valid = false;
 }
 
-
-
-void Time::setValid(int _hours, int _minutes) {
-	valid = setHours(_hours) && setMinutes(_minutes) && (minutes + hours != 0);
+void Time::setValid(int hours_, int minutes_) {
+	valid = setHours(hours_) && setMinutes(minutes_) && (minutes + hours != 0);
 }
 
 std::string Time::format(int num) {
@@ -47,22 +43,20 @@ std::string Time::format(int num) {
 	return result;
 }
 
+bool Time::setHours(int num_) {
+	if (num_ < 0 || num_ >= 24) return false;
 
-
-bool Time::setHours(int _num) {
-	if (_num < 0 || _num >= 24) return false;
-
-	hours = _num;
+	hours = num_;
 	return true;
 }
 int Time::getHours() {
 	return hours;
 }
 
-bool Time::setMinutes(int _num) {
-	if (_num < 0 || _num >= 60) return false;
+bool Time::setMinutes(int num_) {
+	if (num_ < 0 || num_ >= 60) return false;
 
-	minutes = _num;
+	minutes = num_;
 	return true;
 }
 int Time::getMinutes() {
