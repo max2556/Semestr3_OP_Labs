@@ -23,6 +23,9 @@ double fun7(double x);
 double fun8(double x);
 double fun9(double x);
 double fun10(double x);
+double fun11(double x);
+double fun12(double x);
+double fun13(double x);
 
 int main()
 {
@@ -30,7 +33,7 @@ int main()
 		n = 10;					//начальное число разбиений
 	double x, y,					//координаты точки
 		s1, s2, s3, s4, s5;        //площади областей
-	double eps = .0001,         	//точность вычисления
+	double eps = .000001,         	//точность вычисления
 		s = 0;                     //вычисленная площадь области
 	bool M1, M2, M3, M4, M5;           //Принадлежность областям
 
@@ -100,8 +103,10 @@ int main()
 	case 2:
 		s2 = 2;
 		cout << "Formula: S2 = " << s2 << endl;
-		s2 = 2 * integral(-2, -1, n, eps, fun4, s)
-			+ 2 * integral(-1, 0, n, eps, fun5, s);
+		s2 = integral(-2, -1, n, eps, fun4, s)
+			+fabs(integral(-2, -1, n, eps, fun11, s))
+			+integral(-1, 0, n, eps, fun5, s)
+			+fabs(integral(-1, 0, n, eps, fun12, s));
 		cout << "Integral:S2 = " << s2;
 		break;
 	case 3:
@@ -114,7 +119,9 @@ int main()
 	case 4:
 		s4 = M_PI / 3 - sqrt(3) + 1;
 		cout << "Formula: S4 = " << s4 << endl;
-		s4 = 2*fabs(integral(1 - sqrt(3)/2, 1./2, n, eps, fun7, s) - integral(1 - sqrt(3)/2, 1./2, n, eps, fun8, s));
+		s4 = fabs(
+			integral(1 - sqrt(3)/2, 1./2, n, eps, fun7, s) - integral(1 - sqrt(3)/2, 1./2, n, eps, fun8, s)
+			+ integral( 1. / 2, sqrt(3)/2, n, eps, fun13, s) - integral(1. / 2, sqrt(3) / 2, n, eps, fun12, s));
 		cout << "Integral:S4 = " << s4;
 		break;
 	case 5:
@@ -129,7 +136,7 @@ int main()
 	return 0;
 }
 
-//нахождение определенного интеграла методом криволинейных трапеций
+//нахождение определенного интеграла методом левого прямоугольника
 double integral(double a, double b, int n, double eps, Tfun fun, double s1)
 {
 	double x, h, s = 0;
@@ -139,7 +146,7 @@ double integral(double a, double b, int n, double eps, Tfun fun, double s1)
 
 	for (i = 0; i < n; i++)
 	{
-		x = a + i * h + h / 2;
+		x = a + i * h;
 		s += fun(x);
 	}
 	s *= h;
@@ -206,4 +213,22 @@ double fun9(double x)
 double fun10(double x)
 {
 	return(-sqrt(1-x*x)-1);
+}
+
+//описание вида интегрируемой функции №4 для линии: (x+1)^2+y^2=1 (нижняя полуокружность)
+double fun11(double x)
+{
+	return(-sqrt(-x * x - 2 * x));
+}
+
+/*описание вида интегрируемой функции №10 для линии: x^2+(y+1)^2=1 (верхняя полуокружность)*/
+double fun12(double x)
+{
+	return(sqrt(1 - x * x) - 1);
+}
+
+/*описание вида интегрируемой функции №2 для линии: x^2+y^2=1 (нижняя полуокружность)*/
+double fun13(double x)
+{
+	return(-sqrt(1 - x * x));
 }
