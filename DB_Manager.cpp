@@ -71,7 +71,7 @@ std::vector<std::string> DB_Manager::search(Record::WeekDay target) {
 	return result;
 }
 
-void DB_Manager::add_record(Record&& record)
+void DB_Manager::add_record(Record const& record)
 {
 	auto s = record.to_string();
 

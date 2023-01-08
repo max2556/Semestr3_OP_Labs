@@ -37,7 +37,8 @@ void Time::setValid(int hours_, int minutes_) {
 	valid = setHours(hours_) && setMinutes(minutes_) && (minutes + hours != 0);
 }
 
-std::string Time::format(int num) {
+std::string Time::format(int num) const
+{
 	std::string result = std::to_string(num);
 	if (result.size() < 2) result = "0" + result;
 	return result;
@@ -67,7 +68,8 @@ bool Time::isValid() {
 	return valid;
 }
 
-std::string Time::to_string() {
+std::string Time::to_string() const
+{
 	std::string result = format(hours) + ":" + format(minutes);
 	return result;
 }

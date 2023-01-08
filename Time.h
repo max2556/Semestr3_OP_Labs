@@ -10,7 +10,7 @@ private:
 	
 private:
 	void setValid(int hours_, int minutes_);
-	std::string format(int num);
+	std::string format(int num) const;
 
 public:
 	Time(std::string& str);
@@ -26,7 +26,7 @@ public:
 	bool isValid();
 
 public:
-	std::string to_string();
+	std::string to_string() const;
 
 public:
     auto operator<=>(const Time& other) const = default;

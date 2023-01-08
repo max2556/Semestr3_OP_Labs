@@ -1,35 +1,41 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
+#include <optional>
+#include <filesystem>
+#include "Record.hpp"
 
-#include "DB_Manager.h"
 
-int pick_result() {
-	int res;
-	bool complete = false;
-	while (!complete) {
-		try {
-			std::cin >> res;
-			complete = true;
-		}
-		catch (const std::exception&) {
-			complete = false;
-		}
-	}
-	return res;
+std::optional<std::string> current_db_filename = std::nullopt;
+std::filesystem::path search_db_path = "search.db";
+
+
+void print_db();
+void create_record();
+void sort_by_name();
+void sort_by_cabinet();
+void search();
+
+//Пытается получить значение с клавиатуры от left до right, включая обе границы
+int pick_in_range(int left, int right)
+{
+	size_t index = 0;
+	do {
+		index = pick_result();
+	} while (index > right || index < left);
+	return index;
 }
 
-void sort_db() {
-	std::cout << "Сортировать по имени? \n";
-
-	std::cout << "Y - yes |  N - no" << std::endl;
-	char result;
-	std::cin >> result;
-	bool res = std::tolower(result) == 'y';
-	
-	if (!res) return;
-
-	DB_Manager::Instance()->sort_name();
+//Пытается получить число из консоли
+int pick_result() {
+	int res;
+	do {
+		std::cin >> res;
+	} while (std::cin.fail());
+	std::cin.ignore();
+	std::cin.clear();
+	return res;
 }
 
 void show_db(std::vector<std::string>&& lines) {
@@ -50,85 +56,15 @@ void show_db(std::vector<std::string>&& lines) {
 	std::cout << result;
 }
 
-void remove_line() {
-	size_t max = DB_Manager::Instance()->size_of_base();
-	if (max == 0) {
-		std::cout << "База пуста! \n";
-		return;
-	}
-	std::cout << "Выберите строку для удаления от 1 до " << max << std::endl;
-
-
-	size_t index = 0;
-	while (index > max || index < 1)
-		index = pick_result();
-
-	DB_Manager::Instance()->remove_line(index);
-}
-
-void modify_line() {
-	size_t max = DB_Manager::Instance()->size_of_base();
-	if (max == 0) {
-		std::cout << "База пуста! \n";
-		return;
-	}
-	std::cout << "Выберите строку для изменения от 1 до " << max << std::endl;
-	size_t line_index = 0;
-	while (line_index > max || line_index < 1)
-		line_index = pick_result();
-
-
-	std::cout << "Выберите поле для изменения: \n";
-	std::cout << "0 - ФИО: \n";
-	std::cout << "1 - Специальность: \n";
-	std::cout << "2 - Кабинет: \n";
-	std::cout << "3 - Время: \n";
-	std::cout << "4 - День: \n";
-
-	size_t index = -1;
-	while (index > 4 || index < 0)
-		index = pick_result();
-
-	Record record = DB_Manager::Instance()->get_record(line_index);
-
-	switch (index) {
-	case 0:
-		std::cout << "Старое значение: " << record.FIO << std::endl;
-		std::cout << "Введите новое: ";
-		std::cin >> record.FIO;
-		break;
-	case 1:
-		std::cout << "Старое значение: " << record.specialization << std::endl;
-		std::cout << "Введите новое: ";
-		record.set_specialization();
-		break;
-	case 2:
-		std::cout << "Старое значение: " << record.cabinet_number << std::endl;
-		std::cout << "Введите новое: ";
-		std::cin >> record.cabinet_number;
-		break;
-	case 3:
-		std::cout << "Старое значение: " << record.work_start.to_string() << std::endl;
-		std::cout << "Введите новое: ";
-		record.set_time();
-		break;
-	case 4:
-	default:
-		std::cout << "Старое значение: " << record.Days[record.day] << std::endl;
-		std::cout << "Введите новое: ";
-		record.set_day();
-		break;
-	}
-
-	DB_Manager::Instance()->change_line(line_index, record.to_string());
-}
-
 void search() {
 	std::cout << "Выберите день недели: \n";
 
-	Record r;
+	std::ifstream in_stream(current_db_filename.value(), std::ios::binary);
+	std::ofstream out_stream(search_db_path, std::ios::binary);
+
+
 	size_t i = 0;
-	for (auto it = r.Days.begin(); it != r.Days.end(); ++i, ++it)
+	for (auto it = Record::Days.begin(); it != Record::Days.end(); ++i, ++it)
 	{
 		std::cout << i + 1 << " - " << it->second << std::endl;
 	}
@@ -138,58 +74,129 @@ void search() {
 	std::cin >> input_i;
 	input = static_cast<Record::WeekDay>(input_i);
 
-	show_db(DB_Manager::Instance()->search(input));
+	Record* temp = nullptr;
+	while (in_stream.read(reinterpret_cast<char*>(temp), sizeof(Record)))
+	{
+		if (temp->day == input) {
+			out_stream.write(reinterpret_cast<char*>(temp), sizeof(Record));
+		}
+	}
+}
+
+void sort_by_name()
+{
+	std::fstream io_stream(current_db_filename.value(), std::ofstream::binary);
+
+	std::size_t records_count = std::filesystem::file_size(current_db_filename.value()) / sizeof(Record);
+	Record* temp1;
+	Record* temp2;
+	for (std::size_t i = 0; i < records_count - 1; i++)
+	{
+		for (std::size_t j = 0; j + 1 < records_count - i; j++)
+		{
+			io_stream.seekg(j * sizeof(Record));
+			io_stream.read(reinterpret_cast<char*>(temp1), sizeof(Record));
+			io_stream.read(reinterpret_cast<char*>(temp2), sizeof(Record));
+
+			if (temp1->FIO > temp2->FIO) {
+				io_stream.seekp(j * sizeof(Record));
+				io_stream.write(reinterpret_cast<char*>(temp2), sizeof(Record));
+				io_stream.write(reinterpret_cast<char*>(temp1), sizeof(Record));
+			}
+		}
+	}
+}
+
+void sort_by_cabinet()
+{
+	std::fstream io_stream(current_db_filename.value(), std::ofstream::binary);
+
+	std::size_t records_count = std::filesystem::file_size(current_db_filename.value()) / sizeof(Record);
+	Record* temp1;
+	Record* temp2;
+	for (std::size_t i = 0; i < records_count - 1; i++)
+	{
+		for (std::size_t j = 0; j + 1 < records_count - i; j++)
+		{
+			io_stream.seekg(j * sizeof(Record));
+			io_stream.read(reinterpret_cast<char*>(temp1), sizeof(Record));
+			io_stream.read(reinterpret_cast<char*>(temp2), sizeof(Record));
+
+			if (temp1->cabinet_number > temp2->cabinet_number) {
+				io_stream.seekp(j * sizeof(Record));
+				io_stream.write(reinterpret_cast<char*>(temp2), sizeof(Record));
+				io_stream.write(reinterpret_cast<char*>(temp1), sizeof(Record));
+			}
+		}
+	}
 }
 
 void choose_workflow(int res) {
-	switch (res)
+	static const std::unordered_map<int, void(*)()> workflows =
 	{
-	case 1:
-		DB_Manager::Instance()->open_database();
-		break;
-	case 2:
-		show_db(DB_Manager::Instance()->read_all());
-		break;
-	case 3:
-		DB_Manager::Instance()->add_record(DB_Manager::Instance()->create_record());
-		break;
-	case 4:
-		remove_line();
-		break;
-	case 5:
-		modify_line();
-		break;
-	case 6:
-		sort_db();
-		break;
-	case 7:
-		search();
-		break;
+		{1, print_db},
+		{2, create_record},
+		{3, sort_by_name},
+		{4, sort_by_cabinet},
+		{5, search}
+	};
 
-	default:
-		break;
+	workflows.at(res)();
+}
+
+void print_db()
+{
+	if (!current_db_filename.has_value()) {
+		std::cout << "Нельзя" << std::endl;
+		return;
 	}
+
+	std::ifstream in_stream(current_db_filename.value());
+	std::string line;
+	while (std::getline(in_stream, line))
+	{
+		std::cout << line;
+	}
+}
+
+void create_record()
+{
+	if (!current_db_filename.has_value()) {
+		std::cout << "Нельзя" << std::endl;
+		return;
+	}
+
+	std::ofstream out_stream(current_db_filename.value(), std::ofstream::binary);
+
+	Record new_record;
+	out_stream << reinterpret_cast<char*>(&new_record);
 }
 
 int main()
 {
 	setlocale(LC_ALL, "ru");
 
+	std::string db_filename = "default_base.txt";
+	std::cout << "Введите файл базы" << std::endl;
+	std::cin >> db_filename;
+	current_db_filename = db_filename;
+
+	if (!std::filesystem::exists(db_filename))
+		std::ofstream{ db_filename };
+
 	int result = -1;
 	while (result != 0)
 	{
 		std::cout <<
 			"Выберите действие: \n"
-			"1 - Открыть базу \n"
-			"2 - Прочитать базу\n"
-			"3 - Добавить запись в базу\n"
-			"4 - Убрать строку из базы \n"
-			"5 - Изменить строку в базе \n"
-			"6 - Отсортировать по имени \n"
-			"7 - Поиск по дню недели \n"
+			"1 - Прочитать базу\n"
+			"2 - Добавить запись в базу\n"
+			"3 - Отсортировать по имени \n"
+			"4 - Отсортировать по кабинету \n"
+			"5 - Поиск по дню недели \n"
 			"0 - Выход\n";
 
-		result = pick_result();
+		result = pick_in_range(0, 6);
 		choose_workflow(result);
 	}
 }

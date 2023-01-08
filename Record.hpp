@@ -37,18 +37,16 @@ public:
 		{Specialization::Dentist,     "Стоматолог"},
 		{Specialization::ENT_Doctor,  "ЛОР"},
 	};
-	std::unordered_map<WeekDay, std::string> Days = {
-		{WeekDay::Monday,	  "Понедельник"},
-		{WeekDay::Tuesday,	  "Вторник"},
-		{WeekDay::Wednesday, "Среда"},
-		{WeekDay::Thursday,  "Четверг"},
-		{WeekDay::Friday,	  "Пятница"},
-		{WeekDay::Saturday,  "Суббота"},
-		{WeekDay::Sunday,	  "Воскресенье"},
-	};
+	static std::unordered_map<WeekDay, std::string> Days;
 
 public:
-	Record() {}
+	Record() {
+		set_fio();
+		set_specialization();
+		set_cabinet();
+		set_time();
+		set_day();
+	}
 	explicit Record(std::string& line) {
 		const char delimiter = '=';
 		std::vector<std::string> fields;
@@ -84,7 +82,7 @@ public:
 	WeekDay day = WeekDay::Monday;
 
 public:
-	std::string to_string()
+	std::string to_string() const
 	{
 		auto resize = [&](std::string s, size_t size) {
 			size_t prev = s.size();
@@ -125,8 +123,7 @@ public:
 		std::cin >> specialization;
 	}
 
-	void set_day()
-	{
+	void set_day() {
 		std::cout << "Выберите день: \n";
 
 		size_t i = 0;
@@ -160,6 +157,20 @@ public:
 		} while (!work_start.setMinutes(minutes));
 	}
 
+	void set_fio() {
+		std::cout << "Введите имя врача \n";
+		std::cin >> FIO;
+	}
+
+	void set_cabinet()
+	{
+		std::cout << "Введите кабинет \n";
+		do {
+			std::cin >> cabinet_number;
+		} while (std::cin.fail());
+		std::cin.ignore();
+		std::cin.clear();
+	}
 private:
 	static inline void ltrim(std::string& s) {
 		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
@@ -196,3 +207,13 @@ inline std::istream& operator>>(std::istream& is, Record::Specialization& i)
 		i = static_cast<Record::Specialization>(tmp);
 	return is;
 }
+
+inline std::unordered_map<Record::WeekDay, std::string> Record::Days = {
+		{WeekDay::Monday,	 "Понедельник"},
+		{WeekDay::Tuesday,	 "Вторник"},
+		{WeekDay::Wednesday, "Среда"},
+		{WeekDay::Thursday,  "Четверг"},
+		{WeekDay::Friday,	 "Пятница"},
+		{WeekDay::Saturday,  "Суббота"},
+		{WeekDay::Sunday,	 "Воскресенье"},
+};
