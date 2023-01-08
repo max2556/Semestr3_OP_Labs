@@ -1,4 +1,4 @@
-﻿#include <string>
+#include <string>
 #include <fstream>
 #include <iostream>
 
@@ -49,6 +49,7 @@ void show_db(std::vector<std::string>&& lines) {
 	result.append("==========================================================================\n");
 	std::cout << result;
 }
+
 void remove_line() {
 	size_t max = DB_Manager::Instance()->size_of_base();
 	if (max == 0) {
@@ -64,6 +65,7 @@ void remove_line() {
 
 	DB_Manager::Instance()->remove_line(index);
 }
+
 void modify_line() {
 	size_t max = DB_Manager::Instance()->size_of_base();
 	if (max == 0) {
@@ -191,4 +193,3 @@ int main()
 		choose_workflow(result);
 	}
 }
-

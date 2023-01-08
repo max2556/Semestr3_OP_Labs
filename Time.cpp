@@ -2,14 +2,12 @@
 
 Time::Time(std::string& str) {
 	auto pos = str.find(':');
-	if (!pos) return; //Åñëè íåò ğàçäåëèòåëÿ - íåëüçÿ
-	//Åñëè ïğåäñòàâëåíèå ÷àñîâ íå ñîîòâåòñòâóåò ôîğìàòó 'hh:mm' - íåëüçÿ
-	if (pos > 2) return;  //Ïğîâåğêà, ÷òî ÷àñû çàíèìàşò íå áîëåå äâóõ ñèìâîëîâ. Çàïèñü '6:00' âàëèäíà, çàïèñü '06:00' âàëèäíà, çàïèñü '006:00' íå âàëèäíà
-	if (str.length() - pos - 1 != 2) return; //Ìèíóòû îáÿçàíû çàíèìàòü äâà ñèìâîëà 
-
+	if (!pos) return; //Ğ•ÑĞ»Ğ¸ Ğ½ĞµÑ‚ Ñ€Ğ°Ğ·Ğ´ĞµĞ»Ğ¸Ñ‚ĞµĞ»Ñ - Ğ½ĞµĞ»ÑŒĞ·Ñ
+	//Ğ•ÑĞ»Ğ¸ Ğ¿Ñ€ĞµĞ´ÑÑ‚Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ Ñ‡Ğ°ÑĞ¾Ğ² Ğ½Ğµ ÑĞ¾Ğ¾Ñ‚Ğ²ĞµÑ‚ÑÑ‚Ğ²ÑƒĞµÑ‚ Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ñƒ 'hh:mm' - Ğ½ĞµĞ»ÑŒĞ·Ñ
+	if (pos > 2) return;  //ĞŸÑ€Ğ¾Ğ²ĞµÑ€ĞºĞ°, Ñ‡Ñ‚Ğ¾ Ñ‡Ğ°ÑÑ‹ Ğ·Ğ°Ğ½Ğ¸Ğ¼Ğ°ÑÑ‚ Ğ½Ğµ Ğ±Ğ¾Ğ»ĞµĞµ Ğ´Ğ²ÑƒÑ… ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ¾Ğ². Ğ—Ğ°Ğ¿Ğ¸ÑÑŒ '6:00' Ğ²Ğ°Ğ»Ğ¸Ğ´Ğ½Ğ°, Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ '06:00' Ğ²Ğ°Ğ»Ğ¸Ğ´Ğ½Ğ°, Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ '006:00' Ğ½Ğµ Ğ²Ğ°Ğ»Ğ¸Ğ´Ğ½Ğ°
+	if (str.length() - pos - 1 != 2) return; //ĞœĞ¸Ğ½ÑƒÑ‚Ñ‹ Ğ¾Ğ±ÑĞ·Ğ°Ğ½Ñ‹ Ğ·Ğ°Ğ½Ğ¸Ğ¼Ğ°Ñ‚ÑŒ Ğ´Ğ²Ğ° ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ° 
 
 	remove(str.begin(), str.end(), ' ');
-
 
 	int hoursPart = atoi(&str[0]);
 	int minutesPart = atoi(&str[pos + 1]);
@@ -17,16 +15,16 @@ Time::Time(std::string& str) {
 	setValid(hoursPart, minutesPart);
 }
 
-Time::Time(int _hours, int _minutes) {
-	setValid(_hours, _minutes);
+Time::Time(int hours_, int minutes_) {
+	setValid(hours_, minutes_);
 }
 
-Time::Time(std::string& _hours, std::string& _minutes) {
-	if (_hours.length() > 2) return;
-	if (_minutes.length() != 2) return;
+Time::Time(std::string& hours_, std::string& minutes_) {
+	if (hours_.length() > 2) return;
+	if (minutes_.length() != 2) return;
 
-	int hoursPart = atoi(&_hours[0]);
-	int minutesPart = atoi(&_minutes[0]);
+	int hoursPart = atoi(&hours_[0]);
+	int minutesPart = atoi(&minutes_[0]);
 
 	setValid(hoursPart, minutesPart);
 }
@@ -35,10 +33,8 @@ Time::Time() {
 	valid = false;
 }
 
-
-
-void Time::setValid(int _hours, int _minutes) {
-	valid = setHours(_hours) && setMinutes(_minutes) && (minutes + hours != 0);
+void Time::setValid(int hours_, int minutes_) {
+	valid = setHours(hours_) && setMinutes(minutes_) && (minutes + hours != 0);
 }
 
 std::string Time::format(int num) {
@@ -47,22 +43,20 @@ std::string Time::format(int num) {
 	return result;
 }
 
+bool Time::setHours(int num_) {
+	if (num_ < 0 || num_ >= 24) return false;
 
-
-bool Time::setHours(int _num) {
-	if (_num < 0 || _num >= 24) return false;
-
-	hours = _num;
+	hours = num_;
 	return true;
 }
 int Time::getHours() {
 	return hours;
 }
 
-bool Time::setMinutes(int _num) {
-	if (_num < 0 || _num >= 60) return false;
+bool Time::setMinutes(int num_) {
+	if (num_ < 0 || num_ >= 60) return false;
 
-	minutes = _num;
+	minutes = num_;
 	return true;
 }
 int Time::getMinutes() {

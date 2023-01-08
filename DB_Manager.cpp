@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "DB_Manager.h"
-#include "Sort.h"
+#include "Sort.hpp"
 
 constexpr auto _READ_WRITE = std::fstream::out | std::fstream::in;
 constexpr auto _WRITE = std::fstream::out;
@@ -57,16 +57,16 @@ std::vector<std::string> DB_Manager::search(Record::WeekDay target) {
 	std::vector<Record> records;
 	std::vector<std::string> result;
 
-	for (auto l : lines) {
-		Record&& rec = Record(l);
+	for (auto& line : lines) {
+		auto rec = Record(line);
 		if (rec.day == target)
 			result.push_back(rec.to_string());
 	}
 
 	std::fstream fs(SEARCHBASE);
 	if (fs.good())
-		for (auto l : result)
-			fs.write(l.c_str(), l.size());
+		for (auto& line : result)
+			fs.write(line.c_str(), line.size());
 
 	return result;
 }
@@ -85,15 +85,15 @@ void DB_Manager::add_record(Record&& record)
 Record DB_Manager::create_record()
 {
 	Record new_record;
-	std::cout << "Ïîñëåäîâàòåëüíî ââåäèòå ÔÈÎ, ñïåöèàëüíîñòü, êàáèíåò, âðåìÿ è äåíü ðàáîòû \n";
+	std::cout << "ÐŸÐ¾ÑÐ»ÐµÐ´Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾ Ð²Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¤Ð˜Ðž, ÑÐ¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ð¾ÑÑ‚ÑŒ, ÐºÐ°Ð±Ð¸Ð½ÐµÑ‚, Ð²Ñ€ÐµÐ¼Ñ Ð¸ Ð´ÐµÐ½ÑŒ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ \n";
 	
 	
-	std::cout << "Ââåäèòå ÔÈÎ: ";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¤Ð˜Ðž: ";
 	std::getline(std::cin, new_record.FIO);
 	std::getline(std::cin, new_record.FIO);
 	new_record.set_specialization();
 
-	std::cout << "Ââåäèòå íîìåð êàáèíåòà: ";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð½Ð¾Ð¼ÐµÑ€ ÐºÐ°Ð±Ð¸Ð½ÐµÑ‚Ð°: ";
 	std::cin >> new_record.cabinet_number;
 	new_record.set_time();
 	new_record.set_day();
@@ -106,7 +106,7 @@ void DB_Manager::remove_line(size_t index)
 	std::string result;
 	auto all = read_all();
 	auto it = all.begin();
-	it += (index-1);
+	it += (index - 1u);
 	all.erase(it);
 
 	for (auto line : all)
@@ -164,10 +164,12 @@ void DB_Manager::sort_name()
 	for (auto l : lines)
 		records.push_back(Record(l));
 
-	Sort::bubbleSort(records,
+	recordsSort(
+		records,
 		[&](Record& a, Record& b)->bool {
 			return a.FIO < b.FIO;
-		});
+		}
+	);
 
 	std::string result;
 

@@ -31,20 +31,20 @@ public:
 
 public:
 	std::unordered_map<Specialization, std::string> Specializations = {
-		{Specialization::Therapist,   "Терапевт"},
-		{Specialization::Optometrist, "Окулист"},
-		{Specialization::Surgeon,     "Хирург"},
-		{Specialization::Dentist,     "Стоматолог"},
-		{Specialization::ENT_Doctor,  "ЛОР"},
+		{Specialization::Therapist,   "РўРµСЂР°РїРµРІС‚"},
+		{Specialization::Optometrist, "РћРєСѓР»РёСЃС‚"},
+		{Specialization::Surgeon,     "РҐРёСЂСѓСЂРі"},
+		{Specialization::Dentist,     "РЎС‚РѕРјР°С‚РѕР»РѕРі"},
+		{Specialization::ENT_Doctor,  "Р›РћР "},
 	};
 	std::unordered_map<WeekDay, std::string> Days = {
-		{WeekDay::Monday,	  "Понедельник"},
-		{WeekDay::Tuesday,	  "Вторник"},
-		{WeekDay::Wednesday, "Среда"},
-		{WeekDay::Thursday,  "Четверг"},
-		{WeekDay::Friday,	  "Пятница"},
-		{WeekDay::Saturday,  "Суббота"},
-		{WeekDay::Sunday,	  "Воскресенье"},
+		{WeekDay::Monday,	  "РџРѕРЅРµРґРµР»СЊРЅРёРє"},
+		{WeekDay::Tuesday,	  "Р’С‚РѕСЂРЅРёРє"},
+		{WeekDay::Wednesday, "РЎСЂРµРґР°"},
+		{WeekDay::Thursday,  "Р§РµС‚РІРµСЂРі"},
+		{WeekDay::Friday,	  "РџСЏС‚РЅРёС†Р°"},
+		{WeekDay::Saturday,  "РЎСѓР±Р±РѕС‚Р°"},
+		{WeekDay::Sunday,	  "Р’РѕСЃРєСЂРµСЃРµРЅСЊРµ"},
 	};
 
 public:
@@ -55,7 +55,7 @@ public:
 
 		line = line.substr(1, line.size() - 1);
 
-		//Разбиваем строку на поля
+		//Р Р°Р·Р±РёРІР°РµРј СЃС‚СЂРѕРєСѓ РЅР° РїРѕР»СЏ
 		size_t ind = 0;
 		do {
 			ind = line.find(delimiter);
@@ -66,10 +66,10 @@ public:
 			line = line.substr(ind+1, line.size());
 		} while (!line.empty());
 
-		//Собираем поля записи из строк
+		//РЎРѕР±РёСЂР°РµРј РїРѕР»СЏ Р·Р°РїРёСЃРё РёР· СЃС‚СЂРѕРє
 		FIO = fields[0];
 		specialization = fields[1];
-		cabinet_number = std::stoi(fields[2]);
+		cabinet_number = static_cast<std::uint32_t>(std::stoi(fields[2]));
 		work_start = Time(fields[3]);
 		for (auto it = Days.begin(); it != Days.end(); ++it)
 			if (it->second == fields[4])
@@ -77,10 +77,10 @@ public:
 	}
 
 public:
-	std::string FIO = "И.И. Иванова";
+	std::string FIO = "Р.Р. РРІР°РЅРѕРІР°";
 	std::string specialization = Specializations[Specialization::Dentist];
 	uint32_t cabinet_number = 0;
-	Time work_start = Time::_MIN_TIME();
+	Time work_start = Time::MIN_TIME_();
 	WeekDay day = WeekDay::Monday;
 
 public:
@@ -104,7 +104,7 @@ public:
 
 	void set_specialization()
 	{
-		std::cout << "Выберите одну из специальностей врача: \n";
+		std::cout << "Р’С‹Р±РµСЂРёС‚Рµ РѕРґРЅСѓ РёР· СЃРїРµС†РёР°Р»СЊРЅРѕСЃС‚РµР№ РІСЂР°С‡Р°: \n";
 
 		size_t i = 0;
 		for (auto it = Specializations.begin(); it != Specializations.end(); ++i, ++it)
@@ -120,16 +120,14 @@ public:
 			specialization = Specializations[input];
 			return;
 		}
-
-
-
-		std::cout << "Введите специальность самостоятельно \n";
+		
+		std::cout << "Р’РІРµРґРёС‚Рµ СЃРїРµС†РёР°Р»СЊРЅРѕСЃС‚СЊ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ \n";
 		std::cin >> specialization;
 	}
 
 	void set_day()
 	{
-		std::cout << "Выберите день: \n";
+		std::cout << "Р’С‹Р±РµСЂРёС‚Рµ РґРµРЅСЊ: \n";
 
 		size_t i = 0;
 		for (auto it = Days.begin(); it != Days.end(); ++i, ++it)
@@ -148,16 +146,16 @@ public:
 	void set_time() {
 		int hours, minutes;
 
-		std::cout << "Введите время начала работы \n";
-		std::cout << "(часы от 0 до 23, минуты от 0 до 59) \n";
+		std::cout << "Р’РІРµРґРёС‚Рµ РІСЂРµРјСЏ РЅР°С‡Р°Р»Р° СЂР°Р±РѕС‚С‹ \n";
+		std::cout << "(С‡Р°СЃС‹ РѕС‚ 0 РґРѕ 23, РјРёРЅСѓС‚С‹ РѕС‚ 0 РґРѕ 59) \n";
 
 		do {
-			std::cout << "Введите часы: \n";
+			std::cout << "Р’РІРµРґРёС‚Рµ С‡Р°СЃС‹: \n";
 			std::cin >> hours;
 		} while (!work_start.setHours(hours));
 
 		do {
-			std::cout << "Введите минут: \n";
+			std::cout << "Р’РІРµРґРёС‚Рµ РјРёРЅСѓС‚: \n";
 			std::cin >> minutes;
 		} while (!work_start.setMinutes(minutes));
 	}
@@ -183,4 +181,18 @@ private:
 	}
 };
 
+inline std::istream& operator>>(std::istream& is, Record::WeekDay& i)
+{
+	int tmp;
+	if (is >> tmp)
+		i = static_cast<Record::WeekDay>(tmp);
+	return is;
+}
 
+inline std::istream& operator>>(std::istream& is, Record::Specialization& i)
+{
+	int tmp;
+	if (is >> tmp)
+		i = static_cast<Record::Specialization>(tmp);
+	return is;
+}
