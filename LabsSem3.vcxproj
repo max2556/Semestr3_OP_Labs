@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl_gfx;D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -143,12 +143,17 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="LabsSem3.cpp" />
-    <ClCompile Include="TrajectoryFigure.cpp" />
+    <ClCompile Include="Leader.cpp" />
+    <ClCompile Include="CircleFigure.cpp" />
+    <ClCompile Include="Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="dependencies\sdl_gfx\SDL_gfxPrimitives.h" />
     <ClInclude Include="Figure.h" />
-    <ClInclude Include="TrajectoryFigure.h" />
+    <ClInclude Include="Leader.h" />
+    <ClInclude Include="CircleFigure.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
