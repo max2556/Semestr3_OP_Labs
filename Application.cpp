@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
+
 Application::Application()
 {
 	Init();
@@ -26,9 +27,9 @@ void Application::Init()
 	Init_renderer();
 	
 	//Init deltatime
-	Statics::calculateDeltaTime();
+	Statics::getInstance()->calculateDeltaTime();
 	//Init isRunning
-	Statics::isRunning = true;
+	Statics::getInstance()->isRunning = true;
 }
 
 void Application::Init_window()
@@ -71,7 +72,8 @@ const SDL_Renderer* Application::getRenderer() const
 
 void Application::main_loop()
 {
-	while (Statics::isRunning)
+	Statics* stats = Statics::getInstance();
+	while (stats->isRunning)
 	{
 		event_handling();
 		update_all();
@@ -109,7 +111,7 @@ void Application::event_handling()
 		switch (e.type)
 		{
 		case SDL_QUIT:
-			Statics::isRunning = false;
+			Statics::getInstance()->isRunning = false;
 			break;
 		}
 
@@ -117,4 +119,14 @@ void Application::event_handling()
 	}
 }
 
+void Application::Append_Object(Object* object)
+{
+	if (!object) throw new std::exception("Empty object");
+	object->setSurface(SDL_GetWindowSurface(window));
+	objects.push_back(object);
+}
 
+void Application::Start()
+{
+	main_loop();
+}

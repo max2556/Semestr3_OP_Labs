@@ -4,12 +4,13 @@
 
 Leader::Leader(Figure* figure)
 {
+	if (!figure) throw new std::exception("Null figure");
 	moveable = figure;
 }
 
 void Leader::update()
 {
-	SDL_FPoint deltaPos = direction * movementSpeed * Application::Statics::getDeltaTime();
+	SDL_FPoint deltaPos = direction * movementSpeed * Statics::getInstance()->getDeltaTime();
 	moveable->currentPosition += deltaPos;
 }
 

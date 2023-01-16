@@ -23,7 +23,7 @@ inline SDL_FPoint operator-(SDL_FPoint first, SDL_FPoint second)
 	return result;
 }
 
-inline SDL_FPoint operator*(SDL_FPoint vector, double modifier)
+inline SDL_FPoint operator*(SDL_FPoint vector, float modifier)
 {
 	SDL_FPoint result;
 	result.x = vector.x * modifier;

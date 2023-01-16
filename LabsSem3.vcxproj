@@ -76,7 +76,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ExternalIncludePath>D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl2\include;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl2\lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl_gfx;D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl2\lib\x86;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>D:\Projects\VisualStudio\Learning\LabsSem3\dependencies\sdl_gfx;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -146,6 +147,7 @@
     <ClCompile Include="Leader.cpp" />
     <ClCompile Include="CircleFigure.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Statics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="Leader.h" />
     <ClInclude Include="CircleFigure.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Statics.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

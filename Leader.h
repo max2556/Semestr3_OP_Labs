@@ -6,7 +6,7 @@
 class Leader : public Object
 {
 public:
-	Leader(Figure* figure);
+	explicit Leader(Figure* figure);
 
 	void update();
 
@@ -18,9 +18,9 @@ public:
 	std::vector<SDL_FPoint> trajectoryPoints;
 	double movementSpeed;
 	SDL_FPoint direction;
+	Figure* moveable;
 
 private:
-	Figure* moveable;
 	size_t currentTrajectoryPointIndex;
 	size_t nextTrajectoryPointIndex;
 	double arrivingAccuracy = 0.001;

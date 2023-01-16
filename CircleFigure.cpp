@@ -14,6 +14,19 @@ CircleFigure::CircleFigure() :
 	}
 }
 
+CircleFigure::CircleFigure(const SDL_Color& fillColor) :
+	CircleFigure()
+{
+	this->fillColor = fillColor;
+}
+
+CircleFigure::CircleFigure(const SDL_Color& outlineColor, const SDL_Color& fillColor) :
+	CircleFigure()
+{
+	this->outlineColor = outlineColor;
+	this->fillColor = fillColor;
+}
+
 void CircleFigure::draw(SDL_Renderer* renderer)
 {
 	Figure::draw(renderer);
@@ -33,6 +46,16 @@ void CircleFigure::DrawCircle(SDL_Renderer* renderer)
 		currentPosition.x, currentPosition.y,
 		radius,
 		outlineColor.r, outlineColor.g, outlineColor.b, outlineColor.a);
+}
+
+void CircleFigure::setFillColor(SDL_Color& newColor)
+{
+	fillColor = newColor;
+}
+
+void CircleFigure::setOutlineColor(SDL_Color& newColor)
+{
+	outlineColor = newColor;
 }
 
 
