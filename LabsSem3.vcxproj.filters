@@ -53,9 +53,6 @@
     <ClInclude Include="Leader.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\sdl_gfx\SDL_gfxPrimitives.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

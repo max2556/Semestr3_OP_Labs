@@ -3,9 +3,7 @@
 #include <vector>
 #include "Object.h"
 
-//Statics goes everywhere with application.
-//Было бы странно передавать класс приложения, без состояния самого приложения
-#include "Statics.h"
+#include "Statics.h" //Доступны везде, так как Statics хранит состояния приложения
 
 class Application
 {
@@ -16,9 +14,9 @@ public:
 	void Init();
 	void Start();
 	
-	const SDL_Window* getWindow() const;
-	const SDL_Renderer* getRenderer() const;
-	void Append_Object(Object* object);
+	SDL_Window* getWindow() const;
+	SDL_Renderer* getRenderer() const;
+	void Append_Object(Object& object);
 
 private:
 	struct Settings

@@ -1,43 +1,45 @@
 #pragma once
 #include <SDL.h>
 
-SDL_FPoint operator+(SDL_FPoint first, SDL_FPoint second)
+inline SDL_FPoint operator+(const SDL_FPoint& first, const SDL_FPoint& second)
 {
-	SDL_FPoint result;
-	result.x = first.x - second.x;
-	result.y = first.y - second.y;
-	return result;
+	return {first.x + second.x, first.y + second.y};
 }
 
-inline SDL_FPoint operator-(SDL_FPoint point)
+inline SDL_FPoint operator-(const SDL_FPoint& point)
 {
-	SDL_FPoint result;
-	result.x = -point.x;
-	result.y = -point.y;
-	return result;
+	return {-point.x, -point.y};
 }
 
-inline SDL_FPoint operator-(SDL_FPoint first, SDL_FPoint second)
+inline SDL_FPoint operator-(const SDL_FPoint& first, const SDL_FPoint& second)
 {
 	SDL_FPoint result = first + (-second);
 	return result;
 }
 
-inline SDL_FPoint operator*(SDL_FPoint vector, float modifier)
+inline SDL_FPoint operator*(const SDL_FPoint& vector, const float modifier)
 {
-	SDL_FPoint result;
-	result.x = vector.x * modifier;
-	result.y = vector.y * modifier;
-	return result;
+	return {vector.x * modifier, vector.y * modifier};
 }
 
-
-inline void operator+=(SDL_FPoint target, SDL_FPoint modifier)
+inline SDL_FPoint& operator+=(SDL_FPoint& target, const SDL_FPoint& modifier)
 {
 	target = target + modifier;
+	return target;
 }
 
-inline void operator-=(SDL_FPoint target, SDL_FPoint modifier)
+inline SDL_FPoint& operator-=(SDL_FPoint& target, const SDL_FPoint& modifier)
 {
 	target = target - modifier;
+	return target;
+}
+
+long double modulus(const SDL_FPoint& vector)
+{
+	return sqrt(vector.x * vector.x + vector.y * vector.y);
+}
+
+long double dotProduct(const SDL_FPoint& A, const SDL_FPoint& B)
+{
+	return A.x * B.x + A.y * B.y;
 }

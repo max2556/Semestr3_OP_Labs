@@ -34,7 +34,7 @@ void Application::Init()
 
 void Application::Init_window()
 {
-	window = SDL_CreateWindow("Lab#16", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Lab#16", 100, 100, 1024, 720, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 		throw std::logic_error("Init_window Error");
@@ -60,12 +60,12 @@ void Application::try_get_screen()
 	}
 }
 
-const SDL_Window* Application::getWindow() const
+SDL_Window* Application::getWindow() const
 {
 	return window;
 }
 
-const SDL_Renderer* Application::getRenderer() const
+SDL_Renderer* Application::getRenderer() const
 {
 	return renderer;
 }
@@ -73,34 +73,35 @@ const SDL_Renderer* Application::getRenderer() const
 void Application::main_loop()
 {
 	Statics* stats = Statics::getInstance();
+
+	SDL_Rect rect{}; rect.w = 30; rect.h = 40;
 	while (stats->isRunning)
 	{
 		event_handling();
 		update_all();
 		draw_all();
+
+		SDL_RenderPresent(renderer);
+		SDL_Delay(0);
 	}
 }
 
 void Application::update_all()
 {
-	std::for_each(objects.begin(), objects.end(),
-		[&](Object* obj)
-		{
-			if (obj)
-				obj->update();
-		}
-	);
+	for (Object* obj : objects)
+	{
+		obj->update();
+	}
 }
 
 void Application::draw_all()
 {
-	std::for_each(objects.begin(), objects.end(),
-		[&](Object* obj)
-		{
-			if (obj)
-				obj->draw(renderer);
-		}
-	);
+	SDL_SetRenderDrawColor(renderer, 127, 60, 180, 128);
+	SDL_RenderClear(renderer);
+	for (Object* obj : objects)
+	{
+		obj->draw(renderer);
+	}
 }
 
 void Application::event_handling()
@@ -113,17 +114,18 @@ void Application::event_handling()
 		case SDL_QUIT:
 			Statics::getInstance()->isRunning = false;
 			break;
+			
+		default:
+			//std::cout << "Event type: " << e.type << '\n';
+			break;
 		}
-
-		SDL_UpdateWindowSurface(window);
 	}
 }
 
-void Application::Append_Object(Object* object)
+void Application::Append_Object(Object& object)
 {
-	if (!object) throw new std::exception("Empty object");
-	object->setSurface(SDL_GetWindowSurface(window));
-	objects.push_back(object);
+	object.setSurface(SDL_GetWindowSurface(window));
+	objects.push_back(&object);
 }
 
 void Application::Start()

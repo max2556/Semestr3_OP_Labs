@@ -1,18 +1,19 @@
 #pragma once
 #include <SDL.h>
+#include <iostream>
+#include <functional>
 
 class Object
 {
 public:
-	Object() = default;
+	Object();
 	virtual ~Object() = default;
 
-public:
-	virtual void draw(SDL_Renderer* renderer) {};
-	virtual void update() {};
 	virtual void setSurface(SDL_Surface* new_surface);
-
+	virtual void draw(SDL_Renderer* renderer) { std::cout << "Object::draw();\n"; };
+	virtual void update() {};
 protected:
+
 	SDL_Surface* surface = nullptr;
 };
 

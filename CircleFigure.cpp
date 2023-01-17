@@ -1,7 +1,7 @@
 #include <iostream>
-
 #include "CircleFigure.h"
-#include "SDL_gfxPrimitives.h"
+
+int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius);
 
 CircleFigure::CircleFigure() :
 	Figure()
@@ -13,18 +13,21 @@ CircleFigure::CircleFigure() :
 		return;
 	}
 }
-
 CircleFigure::CircleFigure(const SDL_Color& fillColor) :
 	CircleFigure()
 {
 	this->fillColor = fillColor;
 }
-
 CircleFigure::CircleFigure(const SDL_Color& outlineColor, const SDL_Color& fillColor) :
 	CircleFigure()
 {
 	this->outlineColor = outlineColor;
 	this->fillColor = fillColor;
+}
+
+void CircleFigure::setRadius(double radius)
+{
+    this->radius = radius;
 }
 
 void CircleFigure::draw(SDL_Renderer* renderer)
@@ -36,27 +39,53 @@ void CircleFigure::draw(SDL_Renderer* renderer)
 
 void CircleFigure::DrawCircle(SDL_Renderer* renderer)
 {
-	filledCircleRGBA(
-		surface,
-		currentPosition.x, currentPosition.y,
-		radius,
-		fillColor.r, fillColor.g, fillColor.b, fillColor.a);
-	circleRGBA(
-		surface,
-		currentPosition.x, currentPosition.y,
-		radius,
-		outlineColor.r, outlineColor.g, outlineColor.b, outlineColor.a);
+    SDL_SetRenderDrawColor(renderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+    SDL_RenderFillCircle(renderer, currentPosition.x, currentPosition.y, radius);
 }
 
-void CircleFigure::setFillColor(SDL_Color& newColor)
+///Взято из интернета. Интересным методом рисует круг
+int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius)
 {
-	fillColor = newColor;
-}
+    int offsetx, offsety, d;
+    int status;
 
-void CircleFigure::setOutlineColor(SDL_Color& newColor)
-{
-	outlineColor = newColor;
-}
+    offsetx = 0;
+    offsety = radius;
+    d = radius - 1;
+    status = 0;
 
+    while (offsety >= offsetx) {
+
+        status += SDL_RenderDrawLine(renderer, x - offsety, y + offsetx,
+            x + offsety, y + offsetx);
+        status += SDL_RenderDrawLine(renderer, x - offsetx, y + offsety,
+            x + offsetx, y + offsety);
+        status += SDL_RenderDrawLine(renderer, x - offsetx, y - offsety,
+            x + offsetx, y - offsety);
+        status += SDL_RenderDrawLine(renderer, x - offsety, y - offsetx,
+            x + offsety, y - offsetx);
+
+        if (status < 0) {
+            status = -1;
+            break;
+        }
+
+        if (d >= 2 * offsetx) {
+            d -= 2 * offsetx + 1;
+            offsetx += 1;
+        }
+        else if (d < 2 * (radius - offsety)) {
+            d += 2 * offsety - 1;
+            offsety -= 1;
+        }
+        else {
+            d += 2 * (offsety - offsetx - 1);
+            offsety -= 1;
+            offsetx += 1;
+        }
+    }
+
+    return status;
+}
 
 

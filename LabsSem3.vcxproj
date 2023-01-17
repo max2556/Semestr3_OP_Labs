@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="dependencies\sdl_gfx\SDL_gfxPrimitives.h" />
     <ClInclude Include="Figure.h" />
     <ClInclude Include="Leader.h" />
     <ClInclude Include="CircleFigure.h" />

@@ -19,6 +19,8 @@ private:
 
 private:
 	static Statics* instance;
-	Statics();
+	Statics() = default;
+	Statics(Statics const&) = delete;
+	void operator=(Statics const&) = delete;
 };
 
