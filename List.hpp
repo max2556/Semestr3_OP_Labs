@@ -29,7 +29,6 @@ template<class T>
 class List
 {
 private:
-	size_t length = 0;			//Изначально размер 0
 	Node<T>* head = nullptr;	//Изначально первого элемента нет
 	Node<T>* tail = nullptr;	//И последнего элемента нет
 
@@ -51,10 +50,7 @@ private:
 		return current_node;
 	}
 public:
-	explicit List()
-	{
-		length = 0;
-	}
+	explicit List() {}
 
 	explicit List(std::initializer_list<T> init_list)
 	{
@@ -63,22 +59,7 @@ public:
 			push_back(obj);
 		}
 	}
-	~List()
-	{
-		length = 0;
-		Node<T>* next = nullptr;
-		if (head)
-			next = head->next;
-		while (head)
-		{
-			delete head;
-			head = next;
-			if (head)
-				next = head->next;
-		}
-		tail = nullptr;
-	}
-
+	
 	void push_back(Node<T>* new_node)
 	{
 		if (!new_node) return;
@@ -86,14 +67,12 @@ public:
 		if (!head) {
 			head = new_node;    //создаем новую голову
 			tail = head;	   //голова - единственный элемент, значит и последний тоже
-			length++;
 			return;
 		}
 
 		tail->next = new_node;  //создаем новый элемент, указываем на него с конца
 		tail = tail->next;		//новый элемент теперь последний, он хвост
 
-		length++;
 	}
 
 	void push_back(const T& new_element)
@@ -108,45 +87,17 @@ public:
 		if (!head) {
 			head = new_node;
 			tail = head;
-			length++;
 			return;
 		}
 
 		new_node->next = head;
 		head = new_node;
-
-		length++;
 	}
 
 	void push_front(const T& new_element)
 	{
 		Node<T>* new_node = new Node(new_element);  //создаем новый элемент, указываем на него с конца
 		push_front(new_node);
-	}
-
-	void push_at(Node<T>* new_node, size_t pos)
-	{
-		if (pos > length) return;
-
-		if (pos == 0) {
-			push_front(new_node);
-			return;
-		}
-
-		if (pos == length)
-		{
-			push_back(new_node);
-			return;
-		}
-
-		Node<T>* cursor = head;
-		for (size_t i = 0; i < pos - 1; ++i)
-			cursor = cursor->next;
-
-		new_node->next = cursor->next;
-		cursor->next = new_node;
-
-		length++;
 	}
 
 	T pop_back()
@@ -162,7 +113,6 @@ public:
 			head = tail;
 		}
 
-		length--;
 		return result;				//
 	}
 
@@ -174,48 +124,51 @@ public:
 		delete head;
 		head = new_head;
 
-		length--;
 		return result;
-	}
-
-	size_t Length()
-	{
-		return length;
 	}
 
 	void merge(List<T>* another_list)
 	{
-		List<T>* resultList = new List<T>();
-
 		auto cursorLeft = getHead();
 		auto cursorRight = another_list->getHead();
 
+		Node<T>* ptr_to_next = nullptr;
+
 		while (cursorLeft != nullptr && cursorRight != nullptr)
 		{
-			if (cursorLeft->data > cursorRight->data)
+			if (cursorLeft->data >= cursorRight->data)
 			{
-				resultList->push_back(cursorRight->data);
-				cursorRight = cursorRight->next;
+				ptr_to_next = cursorRight->next; //Запомнили
+
+				cursorRight->next = cursorLeft; //сменили голову
+				head = cursorRight;
+
+				cursorRight = ptr_to_next; //сдвинули курсор
+				cursorLeft = head;
+			}
+			else if ((cursorLeft->data <= cursorRight->data) && 
+				((cursorLeft->next != nullptr) <= 
+					(cursorLeft->next!=nullptr && cursorLeft->next->data >= cursorRight->data)))
+			{
+				ptr_to_next = cursorRight->next; //Запомнили следующий за правым
+
+				//Добавили в список
+				cursorRight->next = cursorLeft->next;
+				cursorLeft->next = cursorRight;
+
+				cursorRight = ptr_to_next;
 			}
 			else {
-				resultList->push_back(cursorLeft->data);
 				cursorLeft = cursorLeft->next;
 			}
 		}
+		
 
-		while (cursorLeft)
-		{
-			resultList->push_back(cursorLeft->data);
+		while (cursorLeft->next)
 			cursorLeft = cursorLeft->next;
-		}
 
-		while (cursorRight)
-		{
-			resultList->push_back(cursorRight->data);
-			cursorRight = cursorRight->next;
-		}
+		tail = cursorLeft;
 
-		*this = *resultList;
 	}
 
 	Node<T>* getHead() {
